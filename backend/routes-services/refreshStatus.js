@@ -64,6 +64,33 @@ async function updateQueueAndRides() {
       
     }
 
+
+    const rides = await RideModel.find(); // Get all rides
+
+    for (const ride of rides) {
+        const capacity = ride.capacity; // Get the ride's capacity
+
+        // Get top N (capacity) queues for this ride
+        const topQueues = await QueueModel.find({ ride: ride.name })
+            .sort({ position: 1 })
+            .limit(capacity);
+
+        for (let queueItem of topQueues) {
+            if (!queueItem.upNext) {
+                queueItem.upNext = true;
+                queueItem.queued_at = new Date(); // Set queue time
+                await queueItem.save();
+
+                // Find the user and update their ready rides
+                const user = await UserModel.findOne({ username: queueItem.user });
+                if (user && !user.readyRides.includes(queueItem.ride)) {
+                    user.readyRides.push(queueItem.ride);
+                    await user.save();
+                }
+            }
+        }
+    }
+
     console.log('Queue update and ride preparation completed successfully.');
   } catch (error) {
     console.error('Error during the queue and ride update process:', error);

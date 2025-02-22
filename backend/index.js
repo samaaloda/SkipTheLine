@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const userRouter = require('./routes/userRoutes')
+const rideRouter = require('./routes-services/rideRoutes')
 require('dotenv').config();
 const app = express();
 
@@ -19,6 +20,7 @@ mongoose.connection.on('error', (err) => {
 });
 
 app.use('/', userRouter)
+app.use('/', rideRouter)
 
 
 app.get('/', (req, res) => {
