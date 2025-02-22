@@ -19,9 +19,9 @@
       },
       {
         "name": "Skyhawk",
-        "avg_time": "",
-        "capacity": "",
-        "location": ""
+        "avg_time": "1.5",
+        "capacity": "24",
+        "location": "43.84113838906305, -79.5422258697288"
       },
       {
         "name": "Sledge Hammer",
@@ -31,7 +31,7 @@
       },
       {
         "name": "Soaring Timbers",
-        "avg_time": "",
+        "avg_time": "2.5",
         "capacity": "38",
         "location": "43.8422, -79.5436"
       },
