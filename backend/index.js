@@ -7,7 +7,10 @@ require('dotenv').config();
 const cors = require("cors");
 const app = express();
 
-
+app.use(cors({
+  origin: "*",  // Allow all origins
+  methods: ["GET", "POST", "PUT", "DELETE"],  // Restrict allowed HTTP methods
+}));
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -29,11 +32,7 @@ app.use('/', userRouter)
 app.use('/', rideRouter)
 app.use('/', queueRouter)
 
-app.use(cors({
-  origin: "*",  // Allow all origins
-  methods: ["GET", "POST", "PUT", "DELETE"],  // Restrict allowed HTTP methods
-  allowedHeaders: ["Content-Type", "Authorization"],  // Allow specific headers
-}));
+
 
 
 
