@@ -3,6 +3,7 @@ const router = express.Router();
 const RideModel = require("../models/rideModel");
 
 router.post("/rides", async (req, res) => {
+  console.log(req.body)
     try {
       const { name, avg_time, capacity, location } = req.body;
   
@@ -26,6 +27,23 @@ router.post("/rides", async (req, res) => {
     } catch (error) {
       console.error("Error creating ride:", error);
       return res.status(500).json({ message: "Internal server error." });
+    }
+  });
+
+
+  router.get("/rides/:name", async (req, res) => {
+    try {
+      const rideName = req.params.name;
+      const ride = await RideModel.findOne({ name: rideName });
+  
+      if (!ride) {
+        return res.status(404).json({ message: "Ride not found" });
+      }
+  
+      res.json(ride);
+    } catch (error) {
+      console.error("Error fetching ride:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
   });
   
