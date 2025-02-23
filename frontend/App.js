@@ -1,5 +1,8 @@
 import React from 'react';
 import { Text, View, Image } from 'react-native';
+
+import React, { useState } from 'react';
+import { Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -7,9 +10,32 @@ import RidesScreen from './tabs/rides.js';
 import MapScreen from './tabs/map.js';
 import ScheduleScreen from './tabs/schedule.js';
 
+
+
+function MapScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Map Screen</Text>
+    </View>
+  );
+}
+
+function ScheduleScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Schedule Screen</Text>
+    </View>
+  );
+}
+
+
 const Tab = createBottomTabNavigator();
 
 export default function App() {
+  const [ user, setUser ] = useState("")
+  function login(user) {
+    setUser(user)
+  }
   return (
     <NavigationContainer>
       <Tab.Navigator
