@@ -25,6 +25,9 @@ router.post("/queue", async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "User not found." });
     }
+    if (user.currentlyQueued >= 8) {
+      return res.status(400).json({ error: "User has queued the max number of rides" });
+    }
 
     // Check if the user is already queued for this ride
     if (user.readyRides.includes(ride)) {
@@ -36,7 +39,8 @@ router.post("/queue", async (req, res) => {
     const capacity = parseInt(rideDetails.capacity); // Convert capacity to number
 
     // Determine queue position
-    const position = queueCount + 1;
+    const position = queueCount + people_count;
+    const groupPosition = rideDetails.quequedGroups + 1
     let upNext = position <= capacity; // Up next if within capacity
 
     // Create queue entry
@@ -53,7 +57,8 @@ router.post("/queue", async (req, res) => {
     await queueEntry.save();
 
     // Update ride's queuedPeople count
-    rideDetails.quequedPeople += 1;
+    rideDetails.quequedPeople += people_count;
+    rideDetails.quequedGroups += 1
     await rideDetails.save();
 
     // If upNext is true, add the ride to user's readyRides

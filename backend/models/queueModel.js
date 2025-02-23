@@ -15,13 +15,17 @@ const QueueSchema = new Schema(
         type: String,
         required: true
     },
-    popele_count: {
-      type: String,
+    people_count: {
+      type: Number,
       required: true
     },
     position: {
         type: Number,
         required: true
+    },
+    groupPosition: {
+      type: Number,
+      required: true
     },
     upNext: {
         type: Boolean,

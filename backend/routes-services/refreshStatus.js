@@ -22,7 +22,8 @@ async function updateQueueAndRides() {
         const ride = await RideModel.findOne({ name: queueItem.ride });
 
         if (ride) {
-          ride.quequedPeople -= 1;
+          ride.quequedGroups -= 1;
+          ride.quequedPeople -= queueItem.people_count;
           await ride.save();
         }
 
@@ -31,7 +32,7 @@ async function updateQueueAndRides() {
     }
 
     // step 2
-    const allQueues = await QueueModel.find().sort({ position: 1 });
+    const allQueues = await QueueModel.find().sort({ groupPosition: 1 });
 
     const groupedQueues = allQueues.reduce((acc, queueItem) => {
       if (!acc[queueItem.ride]) acc[queueItem.ride] = [];
@@ -42,8 +43,11 @@ async function updateQueueAndRides() {
     for (const rideName in groupedQueues) {
       const rideQueues = groupedQueues[rideName];
       
+      let position = 0
       for (let i = 0; i < rideQueues.length; i++) {
-        rideQueues[i].position = i + 1;  
+        rideQueues[i].groupPosition = i + 1; 
+        rideQueues[i].position = position + rideQueues[i].people_count;  
+        position = rideQueues[i].position
         await rideQueues[i].save();
       }
     }
@@ -82,3 +86,5 @@ async function updateQueueAndRides() {
     console.error('Error during the queue and ride update process:', error);
   }
 }
+
+export default updateQueueAndRides
