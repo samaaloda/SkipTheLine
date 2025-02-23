@@ -1,0 +1,158 @@
+[
+    {
+      "name": "The Fly",
+      "avg_time": "2",
+      "capacity": "100",
+      "location": "43.84308281375829, -79.54357306437532"
+    },
+    {
+        "name": "Thunder Run",
+        "avg_time": "1.5",
+        "capacity": "40",
+        "location": "43.84296188224701, -79.54217500978882"
+      },
+      {
+        "name": "Time Warp",
+        "avg_time": "1",
+        "capacity": "4",
+        "location": "43.84059739106486, -79.53955584904602"
+      },
+
+      {
+        "name": "Wilde Beast",
+        "avg_time": "3",
+        "capacity": "28",
+        "location": "43.8441830447592, -79.54312986438472"
+      },
+      {
+        "name": "Wilde Knight Mares",
+        "avg_time": "1.5",
+        "capacity": "48",
+        "location": "43.84418389302342, -79.54185170352115"
+      },
+      {
+        "name": "WindSeeker",
+        "avg_time": "1.5",
+        "capacity": "64",
+        "location": "43.84082564402807, -79.54238347602971"
+      },
+      {
+        "name": "Wonder Mountain's Guardian",
+        "avg_time": "3.5",
+        "capacity": "16",
+        "location": "43.842138440280195, -79.54206580672282"
+      },
+      {
+        "name": "Woodstock Whirlybirds",
+        "avg_time": "3.5",
+        "capacity": "16",
+        "location": "43.8448899567313, -79.5451809490449"
+      },
+      {
+        "name": "Yukon Striker",
+        "avg_time": "3.15",
+        "capacity": "24",
+        "location": "43.84017501327787, -79.54237803326062"
+      },
+      {
+        "name": "Psyclone",
+        "avg_time": "2",
+        "capacity": "40",
+        "location": "43.84008, -79.54036"
+      },
+      {
+          "name": "Riptide",
+          "avg_time": "2",
+          "capacity": "40",
+          "location": "43.844178, -79.5405"
+        },
+        {
+          "name": "Shockwave",
+          "avg_time": "3",
+          "capacity": "30",
+          "location": "43.843153, -79.543106"
+        },
+        {
+          "name": "Skyhawk",
+          "avg_time": "1.5",
+          "capacity": "24",
+          "location": "43.84162192118186, -79.54235794907414"
+        },
+        {
+          "name": "Sledge Hammer",
+          "avg_time": "2",
+          "capacity": "48",
+          "location": "43.8397, -79.540656"
+        },
+        {
+          "name": "Soaring Timbers",
+          "avg_time": "2.5",
+          "capacity": "38",
+          "location": "43.8422, -79.5436"
+        },
+        {
+          "name": "The Bat",
+          "avg_time": "2",
+          "capacity": "28",
+          "location": "43.843605, -79.54327"
+        },
+        {
+            "name": "Backlot Stunt Coaster",
+            "avg_time": "1",
+            "capacity": "12",
+            "location": "43.83868, -79.54115"
+          }, 
+          {
+              "name": "Behemoth",
+              "avg_time": "3",
+              "capacity": "32",
+              "location": "43.83900,−79.54063"
+          }, 
+          {
+              "name": "Dragon Fyre",
+              "avg_time": "2",
+              "capacity": "28",
+              "location": "43.84448,−79.54063"
+          }, 
+          {
+              "name": "Drop Tower",
+              "avg_time": "3",
+              "capacity": "16",
+              "location": "43.84448,−79.54063"
+          }, 
+          {
+              "name": "Flight Deck",
+              "avg_time": "1",
+              "capacity": "20",
+              "location": "43.84121,−79.53902"
+          }, 
+          {
+              "name": "Ghoster Coaster",
+              "avg_time": "1",
+              "capacity": "20",
+              "location": "43.843794, -79.546033"
+          }, 
+          {
+              "name": "Leviathan",
+              "avg_time": "3",
+              "capacity": "20",
+              "location": "43.844506, -79.542433"
+          },
+          {
+              "name": "Lumberjack",
+              "avg_time": "4",
+              "capacity": "24",
+              "location": "43.842294, -79.544049"
+          },
+          {
+              "name": "Mighty Canadian Minebuster",
+              "avg_time": "2",
+              "capacity": "30",
+              "location": "43.839167, -79.541944"
+          }
+
+  
+
+
+
+  ]
