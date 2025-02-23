@@ -1,50 +1,58 @@
-import React from 'react';
-import { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, FlatList } from 'react-native';
 
 
-import data from '../data/rides2.json';
+import data from '../data/rides.json';
 
 
 export default function App() {
   const rides = data;
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    // Define the request options with headers and body
+    const requestOptions = {
+      method: 'GET',  
+      headers: {
+        'Content-Type': 'application/json',  // Specify the content type
+      },
+    };
+
+    fetch('http://localhost:4000/rides', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);  // Log the response data
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);  // Handle any errors
+      });
+  }, []); 
+
+
   const filteredRides = rides.filter((ride) =>
     ride.name.toLowerCase().includes(searchQuery.toLowerCase()) //filters data from json file that matches the query
   );
 
-  useEffect(() => {
-    fetch('http://localhost:3000/queue') // Change to your actual backend URL if deployed
-      .then(response => response.json())
-      .then(data => {
-        setRides(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching rides:', error);
-        setLoading(false);
-      });
-    }, []);
-  
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Search Rides</Text>
+     
+      {}
       <TextInput
         style={styles.input}
         placeholder="Search for rides..."
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
+
+
+      {}
       <FlatList
         data={filteredRides}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.rideName}>{item.name}</Text>
-            <Text>Duration: {item.duration} mins</Text>
-            <Text>Price: ${item.price}</Text>
-          </View>
-        )}
+        renderItem={({ item }) => 
+            <Text style={styles.ride}>{item.name}</Text>
+        }
       />
     </View>
   );
@@ -77,4 +85,3 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-
