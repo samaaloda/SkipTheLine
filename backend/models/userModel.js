@@ -20,7 +20,7 @@ const UserSchema = new Schema(
     }, 
     readyRides: {
         type: [String],
-    }
+    },
 
   },
   baseOptions

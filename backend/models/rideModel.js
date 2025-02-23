@@ -16,7 +16,7 @@ const RideSchema = new Schema(
         required: true
     },
     capacity: {
-        type: String,
+        type: Number,
         required: true
     },
     location: {
@@ -26,6 +26,10 @@ const RideSchema = new Schema(
     quequedPeople: {
         type: Number,
         required: true,
+    }, 
+    quequedGroups: {
+      type: Number,
+      required: true,
     }
 
   },
