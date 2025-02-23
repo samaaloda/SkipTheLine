@@ -9,6 +9,8 @@ export default function App() {
   const [useRides, setRides] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [queueMessage, setQueueMessage] = useState(''); // State to store the ride name for confirmation
+  const [enqueuedRide, setEnqueuedRide] = useState(null); // State to store the currently enqueued ride
+  const [sortByWaitTime, setSortByWaitTime] = useState(false); // State for sorting by wait time
 
   useEffect(() => {
     const requestOptions = {
@@ -29,13 +31,23 @@ export default function App() {
       });
   }, []);
 
-  const filteredRides = rides.filter((ride) =>
-    ride.name.toLowerCase().includes(searchQuery.toLowerCase()) // filters data from json file that matches the query
-  );
+  const filteredRides = rides
+    .filter((ride) =>
+      ride.name.toLowerCase().includes(searchQuery.toLowerCase()) // filters data from json file that matches the query
+    )
+    .sort((a, b) => {
+      if (sortByWaitTime) {
+        return a.wait_time - b.wait_time; // Sort by wait time in ascending order
+      }
+      return 0;
+    });
 
   const enqueue = (rideName) => {
-    setQueueMessage(`${rideName} added to queue!`);
-    setModalVisible(true); // Show the modal with the confirmation message
+    if (enqueuedRide !== rideName) {
+      setEnqueuedRide(rideName); // Set the new ride in the queue
+      setQueueMessage(`${rideName} added to queue!`);
+      setModalVisible(true);
+    }
   };
 
   const imageMap = {
@@ -69,14 +81,22 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Search Rides</Text>
-        
+
         <TextInput
           style={styles.input}
           placeholder="Search for rides..."
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
+
+        <TouchableOpacity
+          style={styles.sortButton}
+          onPress={() => setSortByWaitTime(!sortByWaitTime)} // Toggle sort by wait time
+        >
+          <Text style={styles.sortButtonText}>
+            {sortByWaitTime ? 'Unsort by Wait Time' : 'Sort by Wait Time'}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -84,15 +104,21 @@ export default function App() {
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={styles.evRide}>
-              <Image source={imageMap[item.img]} style={styles.img} />
-              <TouchableOpacity
-                style={styles.queue}
-                onPress={() => enqueue(item.name)}
-              >
-                +
-              </TouchableOpacity>
+              <View style={styles.imageContainer}>
+                <Image source={imageMap[item.img]} style={styles.img} />
+                <TouchableOpacity
+                  style={styles.queue}
+                  onPress={() => enqueue(item.name)}
+                  disabled={enqueuedRide === item.name} // Disable if this ride is already enqueued
+                >
+                  <Text style={styles.buttonText}>
+                    {enqueuedRide === item.name ? 'You are in the queue' : '+Enqueue Yourself!'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <Text style={styles.rideName}>{item.name}</Text>
-              <Text style={styles.rideDuration}>Duration: {item.capacity} mins</Text>
+              <Text style={styles.rideDuration}>Duration: {item.avg_time} mins</Text>
+              <Text style={styles.rideDuration}>Wait Time: {item.wait_time} mins</Text>
             </View>
           </View>
         )}
@@ -135,23 +161,31 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 20,
     borderRadius: 15,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 28,
-    color: '#d71b23',
-    marginBottom: 20,
-    textAlign: 'center',
+    backgroundColor: '#fff', 
   },
   input: {
     height: 40,
     borderColor: '#d71b23',
     borderWidth: 2,
-    width: '100%',
+    width: '60%',
     paddingLeft: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     borderRadius: 5,
     fontSize: 16,
+  },
+  sortButton: {
+    height: 40,
+    width: '40%',
+    backgroundColor: '#ffcc00',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  sortButtonText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   evRide: {
     backgroundColor: '#fff',
@@ -172,22 +206,31 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   queue: {
+    position: 'absolute',
+    top: 10,
+    left: '50%',
+    transform: [{ translateX: -75 }],
     backgroundColor: '#ffcc00',
     padding: 10,
     borderRadius: 5,
-    marginLeft: 0,
-    width: 30,
+    width: '70%',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 30,
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     textAlign: 'center',
+    fontFamily: 'Roboto',
   },
   header: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f8f8f8',
     width: '100%',
     padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   img: {
     width: 300,
@@ -196,11 +239,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginRight: 20,
   },
+  imageContainer: {
+    position: 'relative', // This will allow the button to overlay the image
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent black overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContainer: {
     width: 300,
