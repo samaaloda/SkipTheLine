@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, FlatList, TouchableOpacity, Image, Modal } from 'react-native';
 
 import data from '../data/rides.json';
 
@@ -7,6 +7,8 @@ export default function App() {
   const rides = data;
   const [searchQuery, setSearchQuery] = useState('');
   const [useRides, setRides] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+  const [queueMessage, setQueueMessage] = useState(''); // State to store the ride name for confirmation
 
   useEffect(() => {
     const requestOptions = {
@@ -32,29 +34,8 @@ export default function App() {
   );
 
   const enqueue = (rideName) => {
-    useEffect(() => {
-        const requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json', // Specify the content type
-          },
-          body: JSON.stringify({
-            key: 'value',  // Replace with the actual data you want to send
-            anotherKey: 'anotherValue',
-          }),
-        };
-    
-        fetch('http://localhost:4000/queue', requestOptions)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data); // Log the response data
-            setQueueData(data);  // Update the state with the fetched data
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error); // Handle any errors
-          });
-      }, []);
-    alert(`${rideName} added to queue!`);
+    setQueueMessage(`${rideName} added to queue!`);
+    setModalVisible(true); // Show the modal with the confirmation message
   };
 
   const imageMap = {
@@ -84,33 +65,32 @@ export default function App() {
     "../assets/rcs/lumberjack.jpeg": require('../assets/rcs/lumberjack.jpeg'),
     "../assets/rcs/minebuster.jpeg": require('../assets/rcs/minebuster.jpeg')
   };
-  
-  
 
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-      <Text style={styles.title}>Search Rides</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Search Rides</Text>
         
-      <TextInput
-        style={styles.input}
-        placeholder="Search for rides..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Search for rides..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+      </View>
+
       <FlatList
         data={filteredRides}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            
             <View style={styles.evRide}>
-            <Image source={imageMap[item.img]} style={styles.img} />
-                <TouchableOpacity
+              <Image source={imageMap[item.img]} style={styles.img} />
+              <TouchableOpacity
                 style={styles.queue}
                 onPress={() => enqueue(item.name)}
-              >+</TouchableOpacity>
-              
+              >
+                +
+              </TouchableOpacity>
               <Text style={styles.rideName}>{item.name}</Text>
               <Text style={styles.rideDuration}>Duration: {item.capacity} mins</Text>
             </View>
@@ -118,81 +98,128 @@ export default function App() {
         )}
         keyExtractor={(item) => item.name} 
       />
+
+      {/* Modal for confirming queue */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)} // Close the modal
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>{queueMessage}</Text>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => setModalVisible(false)} // Close the modal
+            >
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      backgroundColor: '#f8f8f8', // Light gray to create contrast
-    },
-    card: {
-      width: 350,
-      padding: 15,
-      marginBottom: 20,
-      borderRadius: 15, // Rounded corner
-      backgroundColor: '#fff',
-    },
-    title: {
-      fontSize: 28,
-      color: '#d71b23', // Canada's Wonderland red
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    input: {
-      height: 40,
-      borderColor: '#d71b23', // Red border for matching theme
-      borderWidth: 2,
-      width: '100%',
-      paddingLeft: 10,
-      marginBottom: 20,
-      borderRadius: 5,
-      fontSize: 16,
-    },
-    evRide: {
-      backgroundColor: '#fff',
-      padding: 10,
-      borderRadius: 10, // Round inner elements too
-      borderColor: '#0061ff', // Blue border for a professional touch
-      borderWidth: 1,
-    },
-    rideName: {
-      fontSize: 20,
-      color: '#0061ff', // Blue for names
-      fontWeight: 'bold',
-      marginTop: 10,
-    },
-    rideDuration: {
-      fontSize: 16,
-      color: '#333',
-      marginTop: 5,
-    },
-    queue: {
-      backgroundColor: '#ffcc00', // Bright yellow for action
-      padding: 10,
-      borderRadius: 5,
-      marginLeft: 0,
-      width: 30,
-      height:30,
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 18,
-      textAlign: 'center',
-    },
-    header: {
-      backgroundColor: '#fff',
-      width: '100%',
-      padding: 10,
-    },
-    img: {
-      width: 300,
-      height: 100,
-      borderRadius: 5,
-      marginBottom: 10,
-      marginRight:20,
-    },
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#f8f8f8',
+  },
+  card: {
+    width: 350,
+    padding: 15,
+    marginBottom: 20,
+    borderRadius: 15,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 28,
+    color: '#d71b23',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    borderColor: '#d71b23',
+    borderWidth: 2,
+    width: '100%',
+    paddingLeft: 10,
+    marginBottom: 20,
+    borderRadius: 5,
+    fontSize: 16,
+  },
+  evRide: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 10,
+    borderColor: '#0061ff',
+    borderWidth: 1,
+  },
+  rideName: {
+    fontSize: 20,
+    color: '#0061ff',
+    fontWeight: 'bold',
+    marginTop: 10,
+  },
+  rideDuration: {
+    fontSize: 16,
+    color: '#333',
+    marginTop: 5,
+  },
+  queue: {
+    backgroundColor: '#ffcc00',
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 0,
+    width: 30,
+    height: 30,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  header: {
+    backgroundColor: '#fff',
+    width: '100%',
+    padding: 10,
+  },
+  img: {
+    width: 300,
+    height: 100,
+    borderRadius: 5,
+    marginBottom: 10,
+    marginRight: 20,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Transparent black overlay
+  },
+  modalContainer: {
+    width: 300,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#ffcc00',
+    padding: 10,
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    fontSize: 16,
+    color: '#fff',
+  },
+});

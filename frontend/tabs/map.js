@@ -10,11 +10,12 @@ const Map = () => {
 
     window.initMap = () => {
       new window.google.maps.Map(document.getElementById('map'), {
-        center: { lat:43.84285266267574, lng:-79.539692559626 }, //43.84285266267574, -79.539692559626
-        zoom: 30, 
+        center: { lat: 43.84285266267574, lng: -79.539692559626 }, // Set your center coordinates
+        zoom: 30,
+        mapTypeId: window.google.maps.MapTypeId.SATELLITE, // Set map to satellite view
       });
     };
-    
+
     return () => {
       document.head.removeChild(script);
     };
