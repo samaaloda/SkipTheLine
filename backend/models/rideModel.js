@@ -32,7 +32,7 @@ const RideSchema = new Schema(
   baseOptions
 );
 
-UserSchema.set('toObject', {
+RideSchema.set('toObject', {
   virtuals: true,
   versionKey: false,
   transform: (_doc, ret) => {

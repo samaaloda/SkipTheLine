@@ -10,9 +10,12 @@ async function updateQueueAndRides() {
     const currentTime = moment();
     
     // step 1
+    // create a hashmap of all rides so the max number of ooperations is the # of rides
     const expiredQueues = await QueueModel.find({
       queued_at: { $lt: currentTime.subtract(5, 'minutes').toDate() }
     });
+
+    console.log(expiredQueues)
 
     if (expiredQueues.length > 0) {
       for (let queueItem of expiredQueues) {
@@ -46,23 +49,6 @@ async function updateQueueAndRides() {
     }
 
     // Step 3: Set `upNext` to `true` for the top 20 queue items
-    const top20Queues = await QueueModel.find().sort({ position: 1 }).limit(20);
-
-    for (let queueItem of top20Queues) {
-      if (!queueItem.upNext) {
-        queueItem.upNext = true;
-        queueItem.queued_at = currentTime.toDate(); 
-        await queueItem.save();
-
-        const user = await UserModel.findOne({ username: queueItem.user });
-
-        if (user && !user.readyRides.includes(queueItem.ride)) {
-            user.readyRides.push(queueItem.ride);
-            await user.save();
-        }
-      }
-      
-    }
 
 
     const rides = await RideModel.find(); // Get all rides

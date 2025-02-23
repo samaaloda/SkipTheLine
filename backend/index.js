@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRouter = require('./routes/userRoutes')
+const userRouter = require('./routes-services/userRoutes')
 const rideRouter = require('./routes-services/rideRoutes')
+const queueRouter = require('./routes-services/quequesRoutes')
 require('dotenv').config();
+const cors = require("cors");
 const app = express();
+
 
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -19,8 +22,19 @@ mongoose.connection.on('error', (err) => {
   console.error('MongoDB connection error:', err);
 });
 
+app.use(express.json());
+
+
 app.use('/', userRouter)
 app.use('/', rideRouter)
+app.use('/', queueRouter)
+
+app.use(cors({
+  origin: "*",  // Allow all origins
+  methods: ["GET", "POST", "PUT", "DELETE"],  // Restrict allowed HTTP methods
+  allowedHeaders: ["Content-Type", "Authorization"],  // Allow specific headers
+}));
+
 
 
 app.get('/', (req, res) => {

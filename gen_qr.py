@@ -13,6 +13,6 @@ def generate_qr(user_id, ride_id):
     qr.save(filename)
     return filename
 
-#if __name__ == "__main__":
-#    filename = generate_qr("user123", "Leviathan")
-#    print(f"QR code saved as: {filename}")
+if __name__ == "__main__":
+   filename = generate_qr("user123", "Leviathan")
+   print(f"QR code saved as: {filename}")

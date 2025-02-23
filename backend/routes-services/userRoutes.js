@@ -49,6 +49,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Invalid username or password' });
     }
+    console.log("here")
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
@@ -56,67 +57,16 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid username or password' });
     }
 
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-// Get User Route (For authenticated users)
-router.get('/me', async (req, res) => {
-  try {
-    if (!req.session.userId) {
-      return res.status(401).json({ message: 'Not authenticated' });
-    }
-
-    const user = await UserModel.findById(req.session.userId).select('-password');
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
     res.status(200).json(user);
 
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-router.put('/update-user/:id', async (req, res) => {
-  const { id } = req.params;
-  const { currentlyQueued, readyRides } = req.body;
 
-  try {
-    // Validate that only allowed fields are passed
-    const updateData = {};
-    if (currentlyQueued !== undefined) {
-      updateData.currentlyQueued = currentlyQueued;
-    }
-    if (readyRides !== undefined) {
-      updateData.readyRides = readyRides;
-    }
-
-    // Check if at least one field is being updated
-    if (Object.keys(updateData).length === 0) {
-      return res.status(400).json({ message: 'No valid fields to update.' });
-    }
-
-    // Find the user by ID and update
-    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
-
-    // If the user does not exist
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found.' });
-    }
-
-    // Send the updated user as response
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
 
 
 module.exports = router;
