@@ -33,9 +33,6 @@ app.use('/', rideRouter)
 app.use('/', queueRouter)
 
 
-
-
-
 app.get('/', (req, res) => {
   res.send('Hello World');
 });
